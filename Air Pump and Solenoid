@@ -1,0 +1,65 @@
+const int solenoid1 = 3;    // Pin controlling the motor
+const int solenoid2 = 6;    // Deflating solenoid
+const int buttonPin1 = 12;   // Pin where the button is connected
+const int buttonPin2 = 13;  // Deflate button
+int buttonState1 = 0;        // Variable to store the button state
+int buttonState2 = 0;
+
+void setup() {
+  pinMode(solenoid1, OUTPUT);  // Set solenoid pin as output
+  pinMode(solenoid2, OUTPUT);
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);  // Use internal pull-up resistor on the button pin
+  Serial.begin(9600);          // Start serial communication
+}
+
+void loop() {
+  buttonState1 = digitalRead(buttonPin1); // Read the state of the button
+  buttonState2 = digitalRead(buttonPin2);
+  // Check if the button is pressed (pin will be LOW due to INPUT_PULLUP)
+  if (buttonState1 == HIGH) {
+    digitalWrite(solenoid1, HIGH);   // Turn on the motor (inflate)
+    Serial.println("on");
+    delay(3000);                     // Keep the motor on for 1 second
+    digitalWrite(solenoid1, LOW);    // Turn off the motor
+    Serial.println("off");
+    delay(1000);                     // Wait before checking the button again
+  }    
+  // Check if the button is pressed (pin will be LOW due to INPUT_PULLUP)
+  if (buttonState2 == HIGH) {
+    digitalWrite(solenoid2, HIGH);   // Turn on the solenoid (deflate)
+    Serial.println("on");
+    delay(1000);                     // Keep the solenoid on for 1 second
+    digitalWrite(solenoid2, LOW);    // Turn off the solenoid
+    Serial.println("off");
+    delay(1000);                     // Wait before checking the button again
+  }
+}
+
+
+
+Gyroscope Code:
+
+#include "Wire.h"      
+#include "I2Cdev.h"    
+#include "MPU6050.h"    
+
+MPU6050 mpu;
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+
+struct MyData {
+  byte X;
+  byte Y;
+  byte Z;
+};
+
+MyData data;
+
+void setup()
+{
+  Serial.begin(9600);
+  Wire.begin();
+  mpu.initialize();
+  //pinMode(LED_BUILTIN, OUTPUT);
+}
